@@ -42,11 +42,23 @@ jobs:
       - name: Setup Gradle cache
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build
+      - name: Build and capture full log
         run: |
+          set +e
           cd "$PROJECT_DIR"
           chmod +x gradlew
-          ./gradlew clean build --stacktrace --warning-mode all
+          ./gradlew clean build --stacktrace --warning-mode all 2>&1 | tee "$GITHUB_WORKSPACE/rockstar-build.log"
+          BUILD_STATUS=${PIPESTATUS[0]}
+          echo "BUILD_STATUS=$BUILD_STATUS" >> "$GITHUB_ENV"
+          exit 0
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Rockstar-1.21.11-build-log
+          if-no-files-found: warn
+          path: rockstar-build.log
 
       - name: Show produced files
         if: always()
@@ -54,6 +66,7 @@ jobs:
           find "$PROJECT_DIR/build/libs" -maxdepth 1 -type f -printf '%f\n' 2>/dev/null || true
 
       - name: Upload JAR
+        if: env.BUILD_STATUS == '0'
         uses: actions/upload-artifact@v4
         with:
           name: Rockstar-Client-1.21.11-Fabric
@@ -61,3 +74,9 @@ jobs:
           path: |
             ${{ env.PROJECT_DIR }}/build/libs/*.jar
             !${{ env.PROJECT_DIR }}/build/libs/*-sources.jar
+
+      - name: Mark build failed
+        if: env.BUILD_STATUS != '0'
+        run: |
+          echo "Gradle compilation failed. See the Rockstar-1.21.11-build-log artifact."
+          exit 1
