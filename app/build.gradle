@@ -1,16 +1,17 @@
 plugins { id 'com.android.application' }
 android {
-    namespace 'dev.cfaimguide'
+    namespace 'dev.cfvision'
     compileSdk 35
     defaultConfig {
-        applicationId 'dev.cfaimguide'
+        applicationId 'dev.cfvision'
         minSdk 26
         targetSdk 34
-        versionCode 3
-        versionName '0.3'
+        versionCode 5
+        versionName '1.0'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
 }
+dependencies { implementation 'org.tensorflow:tensorflow-lite:2.17.0' }

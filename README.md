@@ -1,3 +1,2 @@
-# CF AimGuide — Android APK source
-This is a screen overlay and color detection prototype with an internal training arena. It does not modify CounterFlame, aim automatically, shoot, or display players through walls.
-Open the Actions tab on the cf-aimguide-android-build branch to download the app-debug.apk artifact after a successful run.
+# CF Vision 1.0 Android
+Proof-of-concept onscreen computer vision and accessibility-gesture autoaim. Detects visible person-class objects using COCO YOLOv8n, highlights candidate bounding boxes and can perform aim gestures. Must explicitly grant MediaProjection and Accessibility; user must toggle Aim. Does not inspect game memory, see through walls, bypass anti-cheat, or identify friendly vs enemy. Accuracy in CounterFlame is untested. YOLOv8n model is AGPL-3.0; use and distribute in compliance with Ultralytics license. Model provided by SpotLab and acquired with checksum verification at build time.
