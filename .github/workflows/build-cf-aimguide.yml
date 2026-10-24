@@ -1,0 +1,40 @@
+name: Build CF Vision APK
+on:
+  push:
+    branches: [cf-aimguide-android-build]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install Android SDK
+        run: |
+          SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -1)"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Download person detection model
+        run: |
+          mkdir -p app/src/main/assets
+          curl --fail --location --retry 3 --retry-delay 2 \
+            'https://huggingface.co/SpotLab/YOLOv8Detection/resolve/3005c6751fb19cdeb6b10c066185908faf66a097/yolov8n_saved_model/yolov8n_float32.tflite' \
+            -o app/src/main/assets/yolov8n.tflite
+          echo '435e0b6375a32b862ed30cb630256d5dbefb9597c53c87125a66e44ab26cfd68  app/src/main/assets/yolov8n.tflite' | sha256sum --check
+      - name: Compile debug APK
+        run: gradle --no-daemon --stacktrace assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CF-Vision-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

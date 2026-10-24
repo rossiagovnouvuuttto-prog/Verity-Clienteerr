@@ -1,7 +1,2 @@
-# Rockstar Client 1.21.11 Fabric port
-
-GitHub Actions workspace for building the user's Rockstar Client source port for Minecraft 1.21.11 Fabric.
-
-Expected source archive at repository root: `ROCKSTAR-1.21.11-source.zip`.
-
-The workflow extracts the archive, builds it with Java 21 using the included Gradle wrapper, and uploads the non-sources JAR from `build/libs/` as a GitHub Actions artifact.
+# CF Vision 1.0 Android
+Proof-of-concept onscreen computer vision and accessibility-gesture autoaim. Detects visible person-class objects using COCO YOLOv8n, highlights candidate bounding boxes and can perform aim gestures. Must explicitly grant MediaProjection and Accessibility; user must toggle Aim. Does not inspect game memory, see through walls, bypass anti-cheat, or identify friendly vs enemy. Accuracy in CounterFlame is untested. YOLOv8n model is AGPL-3.0; use and distribute in compliance with Ultralytics license. Model provided by SpotLab and acquired with checksum verification at build time.
