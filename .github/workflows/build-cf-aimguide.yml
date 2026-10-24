@@ -2,6 +2,8 @@ name: Build CF AimGuide APK
 on:
   push:
     branches: [cf-aimguide-android-build]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 jobs:
   build:
